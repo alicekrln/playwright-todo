@@ -1,0 +1,25 @@
+name: Playwright-tester
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Installera paket
+        run: npm ci
+      - name: Kontrollera kod och bygg sajten
+        run: |
+          npm run lint
+          npm run build
+      - name: Installera Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Kör Playwright-tester
+        run: npm test
